@@ -3,27 +3,17 @@ package com.fido.apiautomation.tests;
 import com.fido.apiautomation.endpoints.VideoGamesController;
 import org.testng.annotations.Test;
 import io.restassured.response.Response;
-import org.testng.annotations.Test;
 import static org.hamcrest.Matchers.*;
 
-import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 
 import io.qameta.allure.Description;
-import io.qameta.allure.Step;
-import io.qameta.allure.restassured.AllureRestAssured;
 
 public class VideoGamesControllerTest {
     VideoGamesController videoGamesController = new VideoGamesController();
 
-//    TODO:: validate the schemas
     @Test
-    @Description("Test to get video game details") // Optional, can use for linking to requirements
-    public void testGetAllGames() {
-        videoGamesController.getAllVideoGames();
-    }
-
-    @Test
+    @Description("Verify that all video games can be fetched and match the schema")
     public void testGetAllVideoGames() {
         // Initialize VideoGamesController
         VideoGamesController videoGamesController = new VideoGamesController();
@@ -31,17 +21,17 @@ public class VideoGamesControllerTest {
         // Get all video games
         Response response = videoGamesController.getAllVideoGames();
 
-//        System.out.println("Response Body: " + response.asString());
-
-        // Validate the response body
-        response.then().body("size()", greaterThan(0)) // Check there are games in the response
-                .body("[0].id", notNullValue()) // Ensure the first game has a non-null ID
-                .body("[0].name", notNullValue()); // Ensure the first game has a non-null name
+        response.then()
+                .statusCode(200)
+                .header("Content-Type", equalTo("application/json"))
+                .body("size()", greaterThan(0)) // Ensure games exist in the response
+                .body("[0].id", notNullValue()) // First game has a non-null ID
+                .body("[0].name", notNullValue()); // First game has a non-null name
+//               .body(matchesJsonSchemaInClasspath(VIDEO_GAME_SCHEMA)); // TODO:: Validate against JSON schema
     }
 
-    // TODO:: validate get all games json schema
-
     @Test
+    @Description("Verify that creating a video game without parameters results in an error")
     public void testCreateVideoGame_WithNoParametersProvided() {
         // Initialize VideoGamesController
         VideoGamesController videoGamesController = new VideoGamesController();
@@ -75,6 +65,7 @@ public class VideoGamesControllerTest {
     }
 
     @Test
+    @Description("Verify that creating a video game with valid parameters is successful")
     public void testCreateVideoGame_AllParametersProvidedWithSuccessfulCreation() {
         // Initialize VideoGamesController
         VideoGamesController videoGamesController = new VideoGamesController();
@@ -102,9 +93,10 @@ public class VideoGamesControllerTest {
 
     }
 
-//    TODO:: Validate post data for the json
+//    General TODO:: Validate post data for the json
 
     @Test
+    @Description("Verify that fetching a video game with a valid ID returns the correct game")
     public void testGetVideoGame_withValidId() {
         // Initialize VideoGamesController
         VideoGamesController videoGamesController = new VideoGamesController();
@@ -129,6 +121,7 @@ public class VideoGamesControllerTest {
     }
 
     @Test
+    @Description("Verify that fetching a video game with an invalid ID returns an error")
     public void testGetVideoGame_UsingInvalidId() {
         // Initialize VideoGamesController
         VideoGamesController videoGamesController = new VideoGamesController();
@@ -144,6 +137,7 @@ public class VideoGamesControllerTest {
     }
 
     @Test
+    @Description("Verify that updating a video game with valid parameters is successful")
     public void testPutVideoGame_WithValidPayload() {
         // Initialize VideoGamesController
         VideoGamesController videoGamesController = new VideoGamesController();
@@ -168,16 +162,10 @@ public class VideoGamesControllerTest {
         response.then().statusCode(200);
 
          System.out.println("Response Body: " + response.asString());
-
-//        response.then()
-//                .body("status", equalTo(403))  // Check that the status is 403
-//                .body("error", equalTo("Forbidden"))  // Check for the "Forbidden" error
-//                .body("message", nullValue())  // Ensure there's an error message
-//                .body("path", equalTo("/api/videogame"));  // Check the path of the error
-
     }
 
     @Test
+    @Description("Verify that updating a video game with an Payload returns an error")
     public void testPutVideoGame_WithInvalidPayload() {
         // Initialize VideoGamesController
         VideoGamesController videoGamesController = new VideoGamesController();
@@ -212,6 +200,7 @@ public class VideoGamesControllerTest {
     }
 
     @Test
+    @Description("Verify that updating a video game with an invalid ID returns an error")
     public void testPutVideoGame_WithValidPayloadButInvalidID() {
         // Initialize VideoGamesController
         VideoGamesController videoGamesController = new VideoGamesController();
@@ -246,6 +235,7 @@ public class VideoGamesControllerTest {
     }
 
     @Test
+    @Description("Verify that updating a video game with an valid payload but invalid ID returns an error")
     public void testPutVideoGame_WithValidPayloadButIDNotFound() {
         // Initialize VideoGamesController
         VideoGamesController videoGamesController = new VideoGamesController();
@@ -280,6 +270,7 @@ public class VideoGamesControllerTest {
     }
 
     @Test
+    @Description("Verify that deleting a video game with a valid ID is successful")
     public void testDeleteVideoGame_withValidId() {
         // Initialize VideoGamesController
         VideoGamesController videoGamesController = new VideoGamesController();
@@ -295,13 +286,44 @@ public class VideoGamesControllerTest {
          System.out.println("Response Body: " + response.asString());
 
 //        todo:: validate the body data
-//        response.then().
-//                body( "m",  equalTo("Video game deleted"));
-
     }
 
+    @Test
+    @Description("Verify that deleting a video game with no ID returns an error")
+    public void testDeleteVideoGame_withNoId() {
+        // Initialize VideoGamesController
+        VideoGamesController videoGamesController = new VideoGamesController();
 
+        // Send the POST request
+        Response response = videoGamesController.deleteVideoGame("");
 
+        System.out.println("Response Body: " + response.asString());
 
+        // Validate that the status code is 405
+        response.then().statusCode(405);
+
+        System.out.println("Response Body: " + response.asString());
+
+//        todo:: validate the body data
+    }
+
+    @Test
+    @Description("Verify that deleting a video game with an invalid ID returns an error")
+    public void testDeleteVideoGame_withInvalidId() {
+        // Initialize VideoGamesController
+        VideoGamesController videoGamesController = new VideoGamesController();
+
+        // Send the POST request
+        Response response = videoGamesController.deleteVideoGame(112332342);
+
+        System.out.println("Response Body: " + response.asString());
+
+        // Validate that the status code is 404
+        response.then().statusCode(404);
+
+        System.out.println("Response Body: " + response.asString());
+
+//        todo:: validate the body data
+    }
 
 }

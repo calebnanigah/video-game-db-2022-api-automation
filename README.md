@@ -59,6 +59,17 @@ mvn test
 ```
 This will execute all tests present in the src/test/java/com/fido/apiautomation/tests directory.
 
+## 4. Viewing Tests Reports
+After running the tests, generate the Allure report:
+```bash
+mvn allure:report
+```
+## 4. Serving Tests Reports
+Serve the report:
+```bash
+mvn allure:serve
+```
+
 ## 5. Setting Up API Endpoints Configuration
 
 1. The API endpoints for the Video Games Swagger API are stored in a configuration file for easy maintenance.
@@ -82,8 +93,9 @@ video.games.controller=/api/v2/videogame
 There is a service layer that handles authentication in `src/test/java/com/fido/apiautomation/endpoints/AuthController.java`
 
 ## 7. Structuring the Test Classes
-Test cases are organized by API controllers.
----
+
+### Test cases are organized by API controllers.
+
 _For this current project, the test are handled by_
 1. API Authentication Controller Test
 2. API Video Games Controller Test

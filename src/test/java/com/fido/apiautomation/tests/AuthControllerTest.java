@@ -22,7 +22,7 @@ public class AuthControllerTest {
     }
 
     @Test
-    @Description("Sample Test Description")
+    @Description("Verify that valid credentials are authenticated successfully")
     public void testAuthenticate_ValidCredentials() {
 
         // Use the AuthController to authenticate with valid credentials
@@ -39,7 +39,7 @@ public class AuthControllerTest {
     }
 
     @Test
-    @Step("Step One")
+    @Step("Verify that invalid credentials are not authenticated")
     public void testAuthenticate_InvalidCredentials() {
         // Use the AuthController to authenticate with invalid credentials
         Response response = authController.authenticate("wrongUser", "wrongPassword");
@@ -47,8 +47,9 @@ public class AuthControllerTest {
         // Assert the status code for invalid credentials
         Assert.assertEquals(response.getStatusCode(), 403, "Expected status code 403 for invalid credentials when password and username are invalid");
     }
-    @Test(description = "Sample Test Description")
-    @Description("Sample Test Description")
+
+    @Test
+    @Description("Verify that empty credentials are not authenticated")
     public void testAuthenticate_EmptyCredentials() {
         // Use the AuthController to authenticate with invalid credentials
         Response response = authController.authenticate("", "");
@@ -58,6 +59,7 @@ public class AuthControllerTest {
     }
 
     @Test
+    @Description("Verify that empty password but with valid username are not authenticated")
     public void testAuthenticate_EmptyPassword() {
         // Use the AuthController to authenticate with invalid credentials
         Response response = authController.authenticate(config.getProperty("auth.username"), "");
@@ -67,6 +69,7 @@ public class AuthControllerTest {
     }
 
     @Test
+    @Description("Verify that empty username but with valid username are not authenticated")
     public void testAuthenticate_EmptyUsername() {
         // Use the AuthController to authenticate with invalid credentials
         Response response = authController.authenticate("", config.getProperty("auth.password"));
