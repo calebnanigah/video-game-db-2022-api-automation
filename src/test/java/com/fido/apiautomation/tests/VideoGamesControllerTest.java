@@ -54,8 +54,6 @@ public class VideoGamesControllerTest {
                 "    \"reviewScore\": \n" +
                 "}";
 
-        // a just  a change
-
         // Send the POST request
         Response response = videoGamesController.createVideoGame(requestBody);
 
