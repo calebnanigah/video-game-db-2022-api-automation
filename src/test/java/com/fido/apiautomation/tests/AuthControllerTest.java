@@ -1,5 +1,8 @@
 package com.fido.apiautomation.tests;
 
+import io.qameta.allure.Description;
+import io.qameta.allure.Step;
+
 import com.fido.apiautomation.endpoints.AuthController;
 import com.fido.apiautomation.config.ConfigReader;
 import io.restassured.response.Response;
@@ -19,6 +22,7 @@ public class AuthControllerTest {
     }
 
     @Test
+    @Description("Sample Test Description")
     public void testAuthenticate_ValidCredentials() {
 
         // Use the AuthController to authenticate with valid credentials
@@ -35,6 +39,7 @@ public class AuthControllerTest {
     }
 
     @Test
+    @Step("Step One")
     public void testAuthenticate_InvalidCredentials() {
         // Use the AuthController to authenticate with invalid credentials
         Response response = authController.authenticate("wrongUser", "wrongPassword");
@@ -42,8 +47,8 @@ public class AuthControllerTest {
         // Assert the status code for invalid credentials
         Assert.assertEquals(response.getStatusCode(), 403, "Expected status code 403 for invalid credentials when password and username are invalid");
     }
-
-    @Test
+    @Test(description = "Sample Test Description")
+    @Description("Sample Test Description")
     public void testAuthenticate_EmptyCredentials() {
         // Use the AuthController to authenticate with invalid credentials
         Response response = authController.authenticate("", "");

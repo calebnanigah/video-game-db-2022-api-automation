@@ -9,11 +9,16 @@ import static org.hamcrest.Matchers.*;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 
+import io.qameta.allure.Description;
+import io.qameta.allure.Step;
+import io.qameta.allure.restassured.AllureRestAssured;
+
 public class VideoGamesControllerTest {
     VideoGamesController videoGamesController = new VideoGamesController();
 
 //    TODO:: validate the schemas
     @Test
+    @Description("Test to get video game details") // Optional, can use for linking to requirements
     public void testGetAllGames() {
         videoGamesController.getAllVideoGames();
     }
